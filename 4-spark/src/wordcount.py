@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     spark_session = SparkSession\
         .builder\
-        .appName("PythonWordCount")\
+        .appName("Lab3WordCount")\
         .getOrCreate()
 
     lines = spark_session\
