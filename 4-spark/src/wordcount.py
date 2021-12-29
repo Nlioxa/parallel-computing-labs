@@ -7,21 +7,21 @@ if __name__ == "__main__":
         print("Usage: wordcount <file>", file=sys.stderr)
         sys.exit(-1)
 
-    spark = SparkSession\
+    spark_session = SparkSession\
         .builder\
         .appName("PythonWordCount")\
         .getOrCreate()
 
-    lines = spark\
+    lines = spark_session\
         .read.text(sys.argv[1])\
         .rdd.map(lambda r: r[0])
     
-    counts = lines.flatMap(lambda x: x.split(' ')) \
+    words_counts = lines.flatMap(lambda x: x.split(' ')) \
                   .map(lambda x: (x, 1)) \
                   .reduceByKey(lambda a, b: a + b) \
                   .sortBy(lambda a:-a[1]) \
     
-    output = counts.take(1)
+    output = words_counts.take(1)
     
     for (word, count) in output:
         print(f"{word}: {i}")
