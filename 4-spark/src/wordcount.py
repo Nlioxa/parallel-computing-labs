@@ -1,6 +1,4 @@
 import sys
-from operator import add
-
 from pyspark.sql import SparkSession
 
 
@@ -14,14 +12,18 @@ if __name__ == "__main__":
         .appName("PythonWordCount")\
         .getOrCreate()
 
-    lines = spark.read.text(sys.argv[1]).rdd.map(lambda r: r[0])
+    lines = spark\
+        .read.text(sys.argv[1])\
+        .rdd.map(lambda r: r[0])
+    
     counts = lines.flatMap(lambda x: x.split(' ')) \
                   .map(lambda x: (x, 1)) \
-                  .reduceByKey(add) \
+                  .reduceByKey(lambda a, b: a + b) \
                   .sortBy(lambda a:-a[1]) \
     
-    output = counts.take(10)
+    output = counts.take(1)
+    
     for (word, count) in output:
-        print("%s: %i" % (word, count))
+        print(f"{word}: {i}")
 
     spark.stop()
